@@ -39,7 +39,6 @@ namespace ToolBot
             myButton.Click += MyButton_Click;
             myButton_off.Click += MyButton_off_Click;
             myButton_clear.Click += MyButton_clear_Click;
-            end.Click += end_Click;
 
 
             if (!System.IO.File.Exists("keylog.txt"))
@@ -61,39 +60,45 @@ namespace ToolBot
         private enum Keys : byte
         {
             VK_F6 = 0x75,
+            VK_F12 = 0x7B,
         }
 
         private async void OnKeyPress(int vkCode)
         {
             // F6が押されたら
-            if (vkCode != (byte)Keys.VK_F6)
+            if (vkCode == (byte)Keys.VK_F6)
             {
-                return;
-            }
-            using (StreamReader sr = new StreamReader("keylog.txt"))
-            {
-                //    //string text = suuti.Text;
-                //   // int number = int.Parse(text);
 
-
-                if (int.TryParse(suuti.Text, out int number))
+                using (StreamReader sr = new StreamReader("keylog.txt"))
                 {
-                    for (int i = 0; i < number; i++)
+                    //    //string text = suuti.Text;
+                    //   // int number = int.Parse(text);
+
+
+                    if (int.TryParse(suuti.Text, out int number))
                     {
-                        sr.BaseStream.Position = 0;
 
-                        while (!sr.EndOfStream)
+
+                        for (int i = 0; i < number; i++)
                         {
-                            Key key = (Key)Enum.Parse(typeof(Key), sr.ReadLine());
-                            if (key != Key.None)
-                            {
-                                keybd_event((byte)KeyInterop.VirtualKeyFromKey(key), 0, 0, new UIntPtr((uint)0));
+                            sr.BaseStream.Position = 0;
 
+                            while (!sr.EndOfStream)
+                            {
+                                Key key = (Key)Enum.Parse(typeof(Key), sr.ReadLine());
+                                if (key != Key.None)
+                                {
+                                    keybd_event((byte)KeyInterop.VirtualKeyFromKey(key), 0, 0, new UIntPtr((uint)0));
+
+                                }
                             }
                         }
                     }
                 }
 
+            }
+            if (vkCode == (byte)Keys.VK_F12) {
+                reset = false;
             }
         }
         private void MainWindow_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -127,12 +132,7 @@ namespace ToolBot
             set = true;
 
 
-        }
-        private void end_Click(object sender, RoutedEventArgs e)
-        {
-            reset = false;
-            System.IO.File.Create("keylog.txt").Close();
-            listBox.Items.Clear();
+   
         }
         private void MyButton_off_Click(object sender, RoutedEventArgs e)
         {
@@ -141,6 +141,8 @@ namespace ToolBot
         private void MyButton_clear_Click(object sender, RoutedEventArgs e)
         {
             set = false;
+            System.IO.File.WriteAllText("keylog.txt", string.Empty);
+            listBox.Items.Clear();
 
         }
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
