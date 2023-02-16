@@ -1,0 +1,23 @@
+﻿<Window x:Class="ToolBot.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ToolBot"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Closed="Window_Closed"
+        >
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="31" Width="184" FontSize="24"><Run Language="ja-jp" Text="自動実行ツール"/></TextBlock>
+        <TextBlock x:Name="suuti" HorizontalAlignment="Left" Margin="189,112,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="31" Width="53" FontSize="22" Text="1"/>
+        <TextBlock HorizontalAlignment="Left" Margin="189,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Language="ja-jp" Text="実行回数"/></TextBlock>
+        <ListBox x:Name="listBox" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="281,-1,0,0"/>
+        <Button x:Name="myButton" Content="記録" HorizontalAlignment="Left" Margin="92,163,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.224,0.361"/>
+        <Button x:Name="myButton_off" Content="オフ" HorizontalAlignment="Left" Margin="154,163,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.224,0.361"/>
+        <Button x:Name="myButton_clear" Content="クリア" HorizontalAlignment="Left" Margin="213,163,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.224,0.361"/>
+        <Button x:Name="Button" Content="実行" HorizontalAlignment="Left" Margin="23,163,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.224,0.361"/>
+        <Button x:Name="end" Content="強制終了" HorizontalAlignment="Left" Margin="71,236,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.224,0.361" Height="70" Width="142"/>
+
+    </Grid>
+    
+</Window>
