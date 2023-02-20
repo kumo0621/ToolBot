@@ -17,8 +17,10 @@
         <TextBox x:Name="suuti" HorizontalAlignment="Left" Margin="183,112,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="60" Height="38" FontSize="24"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="31" Width="184" FontSize="24" Margin="0,229,0,0" Text="F6で実行"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="31" Width="184" FontSize="24" Margin="0,261,0,0" Text="F12で強制終了"/>
-        <TextBox x:Name="kankaku" HorizontalAlignment="Left" Margin="32,112,0,0" TextWrapping="Wrap" Text="10000" VerticalAlignment="Top" Width="107" Height="38" FontSize="24"/>
-        <TextBlock HorizontalAlignment="Left" Margin="38,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="82"><Run Text="実行"/><Run Text="間隔"/><Run Language="ja-jp" Text="×100"/></TextBlock>
+        <TextBox x:Name="kankaku" HorizontalAlignment="Left" Margin="32,112,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="107" Height="38" FontSize="24"/>
+        <TextBlock HorizontalAlignment="Left" Margin="38,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="82"><Run Text="実行"/><Run Text="間隔"/><LineBreak/><Run/></TextBlock>
+        <TextBox x:Name="key_join" HorizontalAlignment="Center" Margin="0,48,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="60" Height="38" FontSize="24" TextChanged="key_join_TextChanged"/>
+        <TextBlock HorizontalAlignment="Center" Margin="0,27,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Language="ja-jp" Text="キー入力時間"/></TextBlock>
 
     </Grid>
 

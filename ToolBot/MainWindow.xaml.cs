@@ -27,14 +27,17 @@ namespace ToolBot
     public partial class MainWindow : Window
     {
         [DllImport("user32.dll")]
-        private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+        public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
-
+        public const int KEYEVENTF_EXTENDEDKEY = 0x0001; // 拡張キー
+        public const int KEYEVENTF_KEYUP = 0x0002;// キーを離す
         private System.Timers.Timer _timer;
+
 
         Boolean set = false;
         Boolean reset = true;
         Boolean start = false;
+        int key_join_local = 3000;
         int i = 0;
         int l = 0;
         int s = 0;
@@ -69,6 +72,7 @@ namespace ToolBot
             {
                 return;
             }
+            const int interval = 100;
             // UIスレッドでリストの内容を処理する
             Dispatcher.Invoke(new Action(() =>
             {
@@ -77,8 +81,8 @@ namespace ToolBot
                     try
                     {
                         // linesにファイルの内容を読み込む
-                       List<string> lines = System.IO.File.ReadAllLines("keylog.txt").ToList();
-                        
+                        List<string> lines = System.IO.File.ReadAllLines("keylog.txt").ToList();
+
                         // 残りの行数がない場合
                         if (currentLineIndex >= lines.Count)
                         {
@@ -86,7 +90,6 @@ namespace ToolBot
                             {
                                 _timer.Stop();
                                 start = false;
-                                
                                 return;
                             }
                             i++;
@@ -103,7 +106,12 @@ namespace ToolBot
                             Key key = (Key)Enum.Parse(typeof(Key), line);
                             if (key != Key.None)
                             {
-                                keybd_event((byte)KeyInterop.VirtualKeyFromKey(key), 0, 0, new UIntPtr((uint)0));
+                                for (int i = 0; i < key_join_local * 1000 / interval; i++)
+                                {
+                                    keybd_event((byte)KeyInterop.VirtualKeyFromKey(key), 0, 0, new UIntPtr((uint)0)); // キーが押されたことを示すフラグ
+                                    System.Threading.Thread.Sleep(key_join_local); // 3秒待機
+                                    keybd_event((byte)KeyInterop.VirtualKeyFromKey(key), 0, 0x0002, new UIntPtr((uint)0)); // キーが離されたことを示すフラグ
+                                }
                             }
                         }
                     }
@@ -115,6 +123,7 @@ namespace ToolBot
                 }
             }));
         }
+
 
         // ファイルの読み込み処理
         private void LoadFile()
@@ -147,13 +156,18 @@ namespace ToolBot
             // F6が押されたら
             if (vkCode == (byte)Keys.VK_F6)
             {
-              if (int.TryParse(kankaku.Text, out int kankaku_))
-            {
-                    _timer = new System.Timers.Timer();
-                    _timer.Interval = kankaku_; // 1秒ごとに実行する
-                    _timer.Elapsed += OnTimerElapsed;
-                    _timer.AutoReset = true; // タイマーを繰り返し実行する
-                    _timer.Enabled = true; // タイマーを有効にする
+                if (int.TryParse(kankaku.Text, out int kankaku_))
+                {
+                    kankaku_ *= 1000;
+                    if (int.TryParse(key_join.Text, out int key_join_))
+                        {
+                        key_join_local = key_join_;
+                        _timer = new System.Timers.Timer();
+                        _timer.Interval = kankaku_; // 1秒ごとに実行する
+                        _timer.Elapsed += OnTimerElapsed;
+                        _timer.AutoReset = true; // タイマーを繰り返し実行する
+                        _timer.Enabled = true; // タイマーを有効にする
+                    }
                 }
                 start = true;
                 _timer.Start();
@@ -220,6 +234,11 @@ namespace ToolBot
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             System.IO.File.Delete("keylog.txt");
+        }
+
+        private void key_join_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }
