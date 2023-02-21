@@ -43,7 +43,8 @@ namespace ToolBot
         [DllImport("user32.dll", SetLastError = true)]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, IntPtr dwExtraInfo);
 
-        [DllImport("user32.dll", EntryPoint = "MapVirtualKeyA", SetLastError = true)]
-        public static extern int MapVirtualKey(int wCode, int wMapType);
+        [DllImport("user32.dll")]
+        internal static extern uint MapVirtualKey(uint uCode, uint uMapType);
+
     }
 }

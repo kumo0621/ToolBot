@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +19,8 @@ using System.Windows.Shapes;
 using static System.Net.WebRequestMethods;
 
 
+
+
 namespace ToolBot
 {
     /// <summary>
@@ -26,8 +29,6 @@ namespace ToolBot
     /// 
     public partial class MainWindow : Window
     {
-        [DllImport("user32.dll")]
-        public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
         public const int KEYEVENTF_EXTENDEDKEY = 0x0001; // 拡張キー
         public const int KEYEVENTF_KEYUP = 0x0002;// キーを離す
@@ -74,7 +75,7 @@ namespace ToolBot
             }
             const int interval = 100;
             // UIスレッドでリストの内容を処理する
-            Dispatcher.Invoke(new Action(() =>
+            Dispatcher.Invoke(new Action(async () =>
             {
                 if (int.TryParse(suuti.Text, out int number))
                 {
@@ -108,9 +109,10 @@ namespace ToolBot
                             {
                                 for (int i = 0; i < key_join_local * 1000 / interval; i++)
                                 {
-                                    keybd_event((byte)KeyInterop.VirtualKeyFromKey(key), 0, 0, new UIntPtr((uint)0)); // キーが押されたことを示すフラグ
-                                    System.Threading.Thread.Sleep(key_join_local); // 3秒待機
-                                    keybd_event((byte)KeyInterop.VirtualKeyFromKey(key), 0, 0x0002, new UIntPtr((uint)0)); // キーが離されたことを示すフラグ
+                                    NativeMethods.keybd_event((byte)KeyInterop.VirtualKeyFromKey(key), (byte)NativeMethods.MapVirtualKey((uint)KeyInterop.VirtualKeyFromKey(key), 0), 0, IntPtr.Zero); // キーが押されたことを示すフラグ
+                                    await Task.Delay(5);
+                                    NativeMethods.keybd_event((byte)KeyInterop.VirtualKeyFromKey(key), (byte)NativeMethods.MapVirtualKey((uint)KeyInterop.VirtualKeyFromKey(key), 0), 2, IntPtr.Zero);
+                                    
                                 }
                             }
                         }
@@ -158,7 +160,7 @@ namespace ToolBot
             {
                 if (int.TryParse(kankaku.Text, out int kankaku_))
                 {
-                    kankaku_ *= 1000;
+                   
                     if (int.TryParse(key_join.Text, out int key_join_))
                         {
                         key_join_local = key_join_;
